@@ -2,6 +2,7 @@
 using GYMmanagement.Interfaces;
 using GYMmanagement.Services;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 namespace GYMmanagement.Extension
 {
@@ -17,7 +18,11 @@ namespace GYMmanagement.Extension
 
             services.AddScoped<ITokenService, TokenServices>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+            });
             return services;
         }
     }

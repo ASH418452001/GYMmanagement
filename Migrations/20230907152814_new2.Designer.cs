@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GYMmanagement.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230829214253_NewTables")]
-    partial class NewTables
+    [Migration("20230907152814_new2")]
+    partial class new2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -66,8 +66,19 @@ namespace GYMmanagement.Migrations
                     b.Property<int>("ClassId")
                         .HasColumnType("int");
 
+                    b.Property<string>("ClassName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ClassTimes")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("MemberId")
                         .HasColumnType("int");
+
+                    b.Property<string>("MemberUserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
@@ -97,8 +108,19 @@ namespace GYMmanagement.Migrations
                     b.Property<int>("ClassId")
                         .HasColumnType("int");
 
+                    b.Property<string>("ClassName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ClassTimes")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("MemberId")
                         .HasColumnType("int");
+
+                    b.Property<string>("MemberUserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
@@ -132,26 +154,21 @@ namespace GYMmanagement.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("Duration")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ScheduleId")
-                        .HasColumnType("int");
 
                     b.Property<int>("TrainerId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ScheduleId");
-
                     b.HasIndex("TrainerId");
 
-                    b.ToTable("Class");
+                    b.ToTable("Classe");
                 });
 
             modelBuilder.Entity("GYMmanagement.Entities.Feedback", b =>
@@ -202,7 +219,7 @@ namespace GYMmanagement.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("MemberShipType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -224,6 +241,10 @@ namespace GYMmanagement.Migrations
 
                     b.Property<int>("MemberId")
                         .HasColumnType("int");
+
+                    b.Property<string>("MemberUserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("datetime2");
@@ -253,7 +274,11 @@ namespace GYMmanagement.Migrations
                     b.Property<int>("ClassId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("ClassTime")
+                    b.Property<string>("ClassName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ClassTimes")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
@@ -275,7 +300,6 @@ namespace GYMmanagement.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Certification")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -292,7 +316,7 @@ namespace GYMmanagement.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("EndDate")
+                    b.Property<DateTime?>("EndDate")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("LockoutEnabled")
@@ -301,8 +325,8 @@ namespace GYMmanagement.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<int>("MembershipId")
-                        .HasColumnType("int");
+                    b.Property<string>("MemberShipType")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -322,17 +346,15 @@ namespace GYMmanagement.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Position")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Specialties")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("StartDate")
+                    b.Property<DateTime?>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("TwoFactorEnabled")
@@ -343,8 +365,6 @@ namespace GYMmanagement.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MembershipId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -470,7 +490,6 @@ namespace GYMmanagement.Migrations
                     b.HasOne("GYMmanagement.Entities.User", "Member")
                         .WithMany("Attendances")
                         .HasForeignKey("MemberId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("GYMmanagement.Entities.Schedule", "Date")
@@ -495,7 +514,6 @@ namespace GYMmanagement.Migrations
                     b.HasOne("GYMmanagement.Entities.User", "Member")
                         .WithMany("Bookings")
                         .HasForeignKey("MemberId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("GYMmanagement.Entities.Schedule", "ClassDate")
@@ -512,17 +530,10 @@ namespace GYMmanagement.Migrations
 
             modelBuilder.Entity("GYMmanagement.Entities.Class", b =>
                 {
-                    b.HasOne("GYMmanagement.Entities.Schedule", "Schedule")
-                        .WithMany("Classes")
-                        .HasForeignKey("ScheduleId")
-                        .IsRequired();
-
                     b.HasOne("GYMmanagement.Entities.User", "Trainer")
-                        .WithMany("Trainer")
+                        .WithMany()
                         .HasForeignKey("TrainerId")
                         .IsRequired();
-
-                    b.Navigation("Schedule");
 
                     b.Navigation("Trainer");
                 });
@@ -543,7 +554,6 @@ namespace GYMmanagement.Migrations
                     b.HasOne("GYMmanagement.Entities.User", "Member")
                         .WithMany("Payments")
                         .HasForeignKey("MemberId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Member");
@@ -554,21 +564,9 @@ namespace GYMmanagement.Migrations
                     b.HasOne("GYMmanagement.Entities.Class", "Class")
                         .WithMany("schedules")
                         .HasForeignKey("ClassId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Class");
-                });
-
-            modelBuilder.Entity("GYMmanagement.Entities.User", b =>
-                {
-                    b.HasOne("GYMmanagement.Entities.Membership", "Membership")
-                        .WithMany("UsersMemberShipType")
-                        .HasForeignKey("MembershipId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Membership");
                 });
 
             modelBuilder.Entity("GYMmanagement.Entities.UserRole", b =>
@@ -640,18 +638,11 @@ namespace GYMmanagement.Migrations
                     b.Navigation("schedules");
                 });
 
-            modelBuilder.Entity("GYMmanagement.Entities.Membership", b =>
-                {
-                    b.Navigation("UsersMemberShipType");
-                });
-
             modelBuilder.Entity("GYMmanagement.Entities.Schedule", b =>
                 {
                     b.Navigation("Attendances");
 
                     b.Navigation("Bookings");
-
-                    b.Navigation("Classes");
                 });
 
             modelBuilder.Entity("GYMmanagement.Entities.User", b =>
@@ -663,8 +654,6 @@ namespace GYMmanagement.Migrations
                     b.Navigation("Feedbacks");
 
                     b.Navigation("Payments");
-
-                    b.Navigation("Trainer");
 
                     b.Navigation("UserRoles");
                 });

@@ -14,6 +14,15 @@ namespace GYMmanagement.Data
         public DataContext(DbContextOptions options) : base(options)
         {
         }
+        public DbSet<ActionLogger> actionLoggers { get; set; }
+
+        public DbSet<Attendance> Attendance { get; set; }
+        public DbSet<Booking> Booking { get; set; }
+        public DbSet<Class> Classe { get; set; }
+        public DbSet<Feedback> Feedback { get; set; }
+        public DbSet<Membership> Membership { get; set; }
+        public DbSet<Schedule> Schedule { get; set; }
+        public DbSet<Payment> Payment { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -34,36 +43,30 @@ namespace GYMmanagement.Data
 
 
 
-            builder.Entity<User>()
-                .HasOne(m => m.Membership)
-                .WithMany(umt => umt.UsersMemberShipType)
-                .HasForeignKey(mt => mt.MembershipId);
 
-
-
-
-
-            builder.Entity <Class>()
-                .HasOne(m => m.Trainer)
-                .WithMany(umt => umt.Trainer)
-                .HasForeignKey(mt => mt.TrainerId)
-                .OnDelete(DeleteBehavior.ClientSetNull);
 
 
 
 
             builder.Entity<Class>()
-                .HasOne(m => m.Schedule)
-                .WithMany(umt => umt.Classes)
-                .HasForeignKey(mt => mt.ScheduleId)
+                .HasOne(m => m.Trainer)
+                .WithMany()
+                .HasForeignKey(ti => ti.TrainerId)
                 .OnDelete(DeleteBehavior.ClientSetNull);
+                
+
+
+
+
+         
 
 
 
             builder.Entity<Payment>()
                 .HasOne(m => m.Member)
                 .WithMany(umt => umt.Payments)
-                .HasForeignKey(mt => mt.MemberId);
+                .HasForeignKey(ti => ti.MemberId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
 
 
 
@@ -71,7 +74,8 @@ namespace GYMmanagement.Data
             builder.Entity<Schedule>()
                 .HasOne(m => m.Class)
                 .WithMany(umt => umt.schedules)
-                .HasForeignKey(mt => mt.ClassId);
+                .HasForeignKey(ci => ci.ClassId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
 
 
 
@@ -80,19 +84,19 @@ namespace GYMmanagement.Data
             builder.Entity<Attendance>()
                 .HasOne(m => m.Member)
                 .WithMany(umt => umt.Attendances)
-                .HasForeignKey(mt => mt.MemberId);
+                .OnDelete(DeleteBehavior.ClientSetNull);
 
             builder.Entity<Attendance>()
                 .HasOne(m => m.AClass)
                 .WithMany(umt => umt.AttendancesId)
-                .HasForeignKey(mt => mt.ClassId)
                 .OnDelete(DeleteBehavior.ClientSetNull);
+                
 
             builder.Entity<Attendance>()
                 .HasOne(m => m.Date)
                 .WithMany(umt => umt.Attendances)
-                .HasForeignKey(mt => mt.scheduleId)
                 .OnDelete(DeleteBehavior.ClientSetNull);
+                
 
 
 
@@ -113,21 +117,21 @@ namespace GYMmanagement.Data
             builder.Entity<Booking>()
                 .HasOne(m => m.Member)
                 .WithMany(umt => umt.Bookings)
-                .HasForeignKey(mt => mt.MemberId);
+                .OnDelete(DeleteBehavior.ClientSetNull);
 
 
             builder.Entity<Booking>()
                 .HasOne(m => m.AClass)
                 .WithMany(umt => umt.Bookings)
-                .HasForeignKey(mt => mt.ClassId)
                 .OnDelete(DeleteBehavior.ClientSetNull);
+                
 
 
             builder.Entity<Booking>()
                 .HasOne(m => m.ClassDate)
                 .WithMany(umt => umt.Bookings)
-                .HasForeignKey(mt => mt.scheduleId)
                 .OnDelete(DeleteBehavior.ClientSetNull);
+                
 
 
 
