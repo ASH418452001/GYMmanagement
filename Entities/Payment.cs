@@ -1,9 +1,8 @@
 ﻿namespace GYMmanagement.Entities
 {
-    public class Payment
+    public class Payment : BaseEntity
     {
-        public int Id { get; set; }
-        public int MemberId { get; set; } 
+        public Guid MemberId { get; set; } 
         public User Member { get; set; }
         public string PaymentMethod { get; set; }
         public DateTime PaymentDate { get; set; }

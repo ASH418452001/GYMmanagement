@@ -24,11 +24,9 @@ namespace GYMmanagement.Migrations
 
             modelBuilder.Entity("GYMmanagement.Entities.ActionLogger", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ActionName")
                         .IsRequired()
@@ -37,19 +35,22 @@ namespace GYMmanagement.Migrations
                     b.Property<DateTime>("CreateDataTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("JsonData")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ReferenceId")
-                        .HasColumnType("int");
 
                     b.Property<string>("TableName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("TableReferenceId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -58,11 +59,9 @@ namespace GYMmanagement.Migrations
 
             modelBuilder.Entity("GYMmanagement.Entities.AppRole", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -88,80 +87,47 @@ namespace GYMmanagement.Migrations
 
             modelBuilder.Entity("GYMmanagement.Entities.Attendance", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ClassId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ClassName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("ClassTimes")
+                    b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("MemberId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("MemberId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("MemberUserName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid?>("ScheduleId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
 
-                    b.Property<int>("scheduleId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("ClassId");
 
                     b.HasIndex("MemberId");
 
-                    b.HasIndex("scheduleId");
+                    b.HasIndex("ScheduleId");
 
                     b.ToTable("Attendance");
                 });
 
             modelBuilder.Entity("GYMmanagement.Entities.Booking", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ClassId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ClassName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("ClassTimes")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("MemberId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("MemberUserName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("MemberId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
 
-                    b.Property<int>("scheduleId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("scheduleId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ClassId");
 
                     b.HasIndex("MemberId");
 
@@ -172,14 +138,18 @@ namespace GYMmanagement.Migrations
 
             modelBuilder.Entity("GYMmanagement.Entities.Class", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Capacity")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -188,14 +158,44 @@ namespace GYMmanagement.Migrations
                     b.Property<int>("Duration")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastDeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("LastDeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("LastUpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("LastUpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TrainerId")
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<Guid>("TrainerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int?>("VersionNumber")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("LastDeletedBy");
+
+                    b.HasIndex("LastUpdatedBy");
 
                     b.HasIndex("TrainerId");
 
@@ -204,11 +204,9 @@ namespace GYMmanagement.Migrations
 
             modelBuilder.Entity("GYMmanagement.Entities.Feedback", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Comments")
                         .IsRequired()
@@ -217,8 +215,8 @@ namespace GYMmanagement.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("MemberId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("MemberId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<double>("Rate")
                         .HasColumnType("float");
@@ -232,15 +230,22 @@ namespace GYMmanagement.Migrations
 
             modelBuilder.Entity("GYMmanagement.Entities.Membership", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Benefits")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CreatedByUserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -250,6 +255,21 @@ namespace GYMmanagement.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastDeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("LastDeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("LastUpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("LastUpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("MemberShipType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -257,21 +277,55 @@ namespace GYMmanagement.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<int?>("VersionNumber")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatedByUserId");
+
+                    b.HasIndex("LastDeletedBy");
+
+                    b.HasIndex("LastUpdatedBy");
 
                     b.ToTable("Membership");
                 });
 
             modelBuilder.Entity("GYMmanagement.Entities.Payment", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
 
-                    b.Property<int>("MemberId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastDeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("LastDeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("LastUpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("LastUpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("MemberId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("datetime2");
@@ -280,10 +334,25 @@ namespace GYMmanagement.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
 
+                    b.Property<int?>("VersionNumber")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("LastDeletedBy");
+
+                    b.HasIndex("LastUpdatedBy");
 
                     b.HasIndex("MemberId");
 
@@ -292,14 +361,12 @@ namespace GYMmanagement.Migrations
 
             modelBuilder.Entity("GYMmanagement.Entities.Schedule", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ClassId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ClassId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("ClassTimes")
                         .HasColumnType("datetime2");
@@ -313,11 +380,9 @@ namespace GYMmanagement.Migrations
 
             modelBuilder.Entity("GYMmanagement.Entities.User", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
@@ -402,11 +467,11 @@ namespace GYMmanagement.Migrations
 
             modelBuilder.Entity("GYMmanagement.Entities.UserRole", b =>
                 {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -415,7 +480,7 @@ namespace GYMmanagement.Migrations
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -429,8 +494,8 @@ namespace GYMmanagement.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -439,7 +504,7 @@ namespace GYMmanagement.Migrations
                     b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -453,8 +518,8 @@ namespace GYMmanagement.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -463,7 +528,7 @@ namespace GYMmanagement.Migrations
                     b.ToTable("AspNetUserClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
                     b.Property<string>("LoginProvider")
                         .HasColumnType("nvarchar(450)");
@@ -474,8 +539,8 @@ namespace GYMmanagement.Migrations
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -484,10 +549,10 @@ namespace GYMmanagement.Migrations
                     b.ToTable("AspNetUserLogins", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("LoginProvider")
                         .HasColumnType("nvarchar(450)");
@@ -505,58 +570,59 @@ namespace GYMmanagement.Migrations
 
             modelBuilder.Entity("GYMmanagement.Entities.Attendance", b =>
                 {
-                    b.HasOne("GYMmanagement.Entities.Class", "AClass")
-                        .WithMany("AttendancesId")
-                        .HasForeignKey("ClassId")
-                        .IsRequired();
-
                     b.HasOne("GYMmanagement.Entities.User", "Member")
                         .WithMany("Attendances")
                         .HasForeignKey("MemberId")
                         .IsRequired();
 
-                    b.HasOne("GYMmanagement.Entities.Schedule", "Date")
+                    b.HasOne("GYMmanagement.Entities.Schedule", null)
                         .WithMany("Attendances")
-                        .HasForeignKey("scheduleId")
-                        .IsRequired();
-
-                    b.Navigation("AClass");
-
-                    b.Navigation("Date");
+                        .HasForeignKey("ScheduleId");
 
                     b.Navigation("Member");
                 });
 
             modelBuilder.Entity("GYMmanagement.Entities.Booking", b =>
                 {
-                    b.HasOne("GYMmanagement.Entities.Class", "AClass")
-                        .WithMany("Bookings")
-                        .HasForeignKey("ClassId")
-                        .IsRequired();
-
                     b.HasOne("GYMmanagement.Entities.User", "Member")
                         .WithMany("Bookings")
                         .HasForeignKey("MemberId")
                         .IsRequired();
 
-                    b.HasOne("GYMmanagement.Entities.Schedule", "ClassDate")
+                    b.HasOne("GYMmanagement.Entities.Schedule", "Class")
                         .WithMany("Bookings")
                         .HasForeignKey("scheduleId")
                         .IsRequired();
 
-                    b.Navigation("AClass");
-
-                    b.Navigation("ClassDate");
+                    b.Navigation("Class");
 
                     b.Navigation("Member");
                 });
 
             modelBuilder.Entity("GYMmanagement.Entities.Class", b =>
                 {
+                    b.HasOne("GYMmanagement.Entities.User", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedBy");
+
+                    b.HasOne("GYMmanagement.Entities.User", "LastDeletedByUser")
+                        .WithMany()
+                        .HasForeignKey("LastDeletedBy");
+
+                    b.HasOne("GYMmanagement.Entities.User", "LastUpdatedByUser")
+                        .WithMany()
+                        .HasForeignKey("LastUpdatedBy");
+
                     b.HasOne("GYMmanagement.Entities.User", "Trainer")
                         .WithMany()
                         .HasForeignKey("TrainerId")
                         .IsRequired();
+
+                    b.Navigation("CreatedByUser");
+
+                    b.Navigation("LastDeletedByUser");
+
+                    b.Navigation("LastUpdatedByUser");
 
                     b.Navigation("Trainer");
                 });
@@ -572,12 +638,51 @@ namespace GYMmanagement.Migrations
                     b.Navigation("Member");
                 });
 
+            modelBuilder.Entity("GYMmanagement.Entities.Membership", b =>
+                {
+                    b.HasOne("GYMmanagement.Entities.User", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedByUserId");
+
+                    b.HasOne("GYMmanagement.Entities.User", "LastDeletedByUser")
+                        .WithMany()
+                        .HasForeignKey("LastDeletedBy");
+
+                    b.HasOne("GYMmanagement.Entities.User", "LastUpdatedByUser")
+                        .WithMany()
+                        .HasForeignKey("LastUpdatedBy");
+
+                    b.Navigation("CreatedByUser");
+
+                    b.Navigation("LastDeletedByUser");
+
+                    b.Navigation("LastUpdatedByUser");
+                });
+
             modelBuilder.Entity("GYMmanagement.Entities.Payment", b =>
                 {
+                    b.HasOne("GYMmanagement.Entities.User", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedBy");
+
+                    b.HasOne("GYMmanagement.Entities.User", "LastDeletedByUser")
+                        .WithMany()
+                        .HasForeignKey("LastDeletedBy");
+
+                    b.HasOne("GYMmanagement.Entities.User", "LastUpdatedByUser")
+                        .WithMany()
+                        .HasForeignKey("LastUpdatedBy");
+
                     b.HasOne("GYMmanagement.Entities.User", "Member")
                         .WithMany("Payments")
                         .HasForeignKey("MemberId")
                         .IsRequired();
+
+                    b.Navigation("CreatedByUser");
+
+                    b.Navigation("LastDeletedByUser");
+
+                    b.Navigation("LastUpdatedByUser");
 
                     b.Navigation("Member");
                 });
@@ -611,7 +716,7 @@ namespace GYMmanagement.Migrations
                     b.Navigation("USER");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("GYMmanagement.Entities.AppRole", null)
                         .WithMany()
@@ -620,7 +725,7 @@ namespace GYMmanagement.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
                     b.HasOne("GYMmanagement.Entities.User", null)
                         .WithMany()
@@ -629,7 +734,7 @@ namespace GYMmanagement.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
                     b.HasOne("GYMmanagement.Entities.User", null)
                         .WithMany()
@@ -638,7 +743,7 @@ namespace GYMmanagement.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
                     b.HasOne("GYMmanagement.Entities.User", null)
                         .WithMany()
@@ -654,10 +759,6 @@ namespace GYMmanagement.Migrations
 
             modelBuilder.Entity("GYMmanagement.Entities.Class", b =>
                 {
-                    b.Navigation("AttendancesId");
-
-                    b.Navigation("Bookings");
-
                     b.Navigation("schedules");
                 });
 

@@ -18,6 +18,8 @@ namespace GYMmanagement.Repostories.UserRepostoies
         {
             _context = context;
             _mapper = mapper;
+
+
         }
 
 

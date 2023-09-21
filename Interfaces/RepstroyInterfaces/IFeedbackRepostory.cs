@@ -8,7 +8,7 @@ namespace GYMmanagement.Interfaces.RepstroyInterfaces
 {
     public interface IFeedbackRepostory
     {
-        Task<PagedList<GetFeedBacksDtO>> GetFeedback(FilterParams filterParams);
+        Task<PagedList<GetFeedBacksDtO>> GetFeedback(BasicMemberFilterParams basicMemberFilterParams);
 
 
         void CreateFeedback(Feedback feedback);

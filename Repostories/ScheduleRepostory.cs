@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using GYMmanagement.Data;
+using GYMmanagement.DtOs.PaymentDtO;
 using GYMmanagement.DtOs.Schedule;
 using GYMmanagement.Entities;
 using GYMmanagement.Filters;
@@ -41,7 +42,7 @@ namespace GYMmanagement.Repostories
         public async Task<PagedList<GetScheduleDtO>> GetSchedule(FilterParams filterParams)
         {
              var a =  _context.Schedule.AsQueryable().Include(a => a.Class)
-                .Where(a => filterParams.Id == null || a.ClassId == filterParams.Id)
+                .Where(a => filterParams.UserId == null || a.ClassId == filterParams.UserId)
                 .Where(a => filterParams.FromDate == null || a.ClassTimes >= filterParams.FromDate)
                 .Where(a => filterParams.ToDate == null || a.ClassTimes <= filterParams.ToDate)
             .AsNoTracking();
@@ -50,5 +51,35 @@ namespace GYMmanagement.Repostories
            .ProjectTo<GetScheduleDtO>(_mapper.ConfigurationProvider),
                filterParams.PageNumber, filterParams.PageSize);
         }
+
+
+
+
+        public async Task<Schedule> GetByScheduleId(Guid id)
+        {
+            var schedule = await _context.Schedule.FindAsync(id);
+            if (schedule == null)
+                throw new Exception("not found.");
+            return schedule;
+        }
+
+
+
+
+        public async Task Update(Create_UpdateScheduleDtO updateScheduleDtO, Guid Id)
+        {
+            var schedule = await GetByScheduleId(Id);
+            _mapper.Map(updateScheduleDtO, schedule);
+            _context.Entry(schedule).State = EntityState.Modified;
+
+
+
+        }
+
+        public void DeleteSchedule(Schedule schedule)
+        {
+            _context.Schedule.Remove(schedule);
+        }
+
     }
 }

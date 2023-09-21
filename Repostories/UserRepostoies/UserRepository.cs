@@ -1,7 +1,4 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using GYMmanagement.Data;
-using GYMmanagement.DtOs.UsersDtO.UpdateUserDtO;
+﻿using GYMmanagement.Data;
 using GYMmanagement.Entities;
 using GYMmanagement.Helpers;
 using GYMmanagement.Interfaces.RepstroyInterfaces.UserRepostoyInterfaces;
@@ -12,16 +9,16 @@ namespace GYMmanagement.Repostories.UserRepostoies
     public class UserRepository : IUserRepostory
     {
         private readonly DataContext _context;
-        
+
 
         public UserRepository(DataContext context)
         {
             _context = context;
-            
+
         }
 
 
-        public async Task<User> GetUserByIdAsync(int id)
+        public async Task<User> GetUserByIdAsync(Guid id)
         {
             return await _context.Users.FindAsync(id);
         }

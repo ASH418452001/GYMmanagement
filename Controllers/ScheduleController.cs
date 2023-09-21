@@ -56,6 +56,37 @@ namespace GYMmanagement.Controllers
 
 
 
+        //[Authorize(Policy = "RequireEmplyeeRole&TrainerRole")]
+        [HttpPut]
+        public async Task<ActionResult> UpdateSchedule(Create_UpdateScheduleDtO updateScheduleDtO, Guid Id)
+        {
+            await _uow.ScheduleRepostory.Update(updateScheduleDtO, Id);
+
+            if (await _uow.Complete())
+                return Ok();
+            return BadRequest("Failed to update Schedule");
+
+
+        }
+
+
+        //[Authorize(Policy = "RequireEmplyeeRole&TrainerRole")]
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteSchedule(Guid id)
+        {
+
+
+            var schedule = await _uow.ScheduleRepostory.GetByScheduleId(id);
+
+            _uow.ScheduleRepostory.DeleteSchedule(schedule);
+
+
+
+            if (await _uow.Complete()) return Ok("Been Deleted");
+
+            return BadRequest("Problem deleting the Schedule");
+        }
+
 
 
     }

@@ -2,26 +2,23 @@
 using AutoMapper.QueryableExtensions;
 using GYMmanagement.Data;
 using GYMmanagement.DtOs.ClassDtO;
-using GYMmanagement.DtOs.UsersDtO.Create;
 using GYMmanagement.Entities;
+using GYMmanagement.Extension;
+using GYMmanagement.Filters;
+using GYMmanagement.Helpers;
 using GYMmanagement.Interfaces.RepstroyInterfaces;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using EntityState = Microsoft.EntityFrameworkCore.EntityState;
 
 namespace GYMmanagement.Repostories
 {
-    public class ClassRepostory : IClassRepostory
+    public class ClassRepostory :ServiceForActionLogger<Class>, IClassRepostory
     {
-        private readonly DataContext _context;
-        private readonly IMapper _mapper;
-        
 
-        public ClassRepostory(DataContext context, IMapper mapper)
+
+        public ClassRepostory(DataContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor)
+        :base(context,httpContextAccessor,mapper)
         {
-            _context = context;
-            _mapper = mapper;
-            
         }
         public async Task<bool> ClassExist(string name)
         {
@@ -30,41 +27,66 @@ namespace GYMmanagement.Repostories
 
         public  void CreateClass(Class @class)
         {
+            @class.SetCreateInfo(GetUserId());
             _context.Classe.Add(@class);
-            _context.SaveChanges();
+            AddActionLogger("CreateClass", @class);
+            //_context.actionLoggers.Add(new ActionLogger()
+            //{
+            //    ActionName = "CreateClass",
+            //    CreateDataTime = DateTime.UtcNow,
+            //    ReferenceId = @class.Id,
+            //    JsonData = JsonConvert.SerializeObject(@class),
+            //    TableName = "Class",
+            //    UserId = UserId
+            //});
+            //_context.SaveChanges();
 
         }
 
-        public async Task<GetClassDtO> GetClassAsync(string Name)
+       
+
+
+        public async Task<PagedList<GetClassDtO>> GetClassAsync(ClassFilterParams classFilterParams)
         {
-            var classDto = await _context.Classe
-                .Where(x => x.Name == Name)
-                .ProjectTo<GetClassDtO>(_mapper.ConfigurationProvider)
-                .SingleOrDefaultAsync();  
+         var a =  _context.Classe.AsQueryable().Include(a => a.Trainer)
+                .Where(a => classFilterParams.TrainerId == null || a.TrainerId == classFilterParams.TrainerId)
+                .Where(a => classFilterParams.ClassName == null || a.Name == classFilterParams.ClassName)
+                .Where(x=> !x.IsDeleted)
+                .AsNoTracking();
 
-            return classDto;
-        }
-
-
-        public async Task<ActionResult<List<GetClassDtO>>> GetClasses()
-        {
-          var a =  await _context.Classe.Include(a=>a.Trainer).ToListAsync();
-            return  _mapper.Map<List<GetClassDtO>>(a);
+            return await PagedList<GetClassDtO>.CreateAsync(a
+           .ProjectTo<GetClassDtO>(_mapper.ConfigurationProvider),
+               classFilterParams.PageNumber, classFilterParams.PageSize);
 
         }
 
         public void Update(Class @class)
         {
-            _context.Entry(@class)  ;
-            
+            @class.SetUpdateInfo(GetUserId());
+            _context.Entry(@class).State = EntityState.Modified  ;
+            AddActionLogger("UpdateClass", @class);
         }
 
 
 
-        public async Task<Class> GetClassByIdAsync(int id)
+        public async Task<Class> GetClassByIdAsync(Guid id)
         {
             return await _context.Classe.FindAsync(id);
         }
 
+
+        public void DeleteClass(Class @class)
+        {
+
+            @class.SetDeleteInfo(GetUserId());
+            @class.IsDeleted = true;
+            _context.Classe.Remove(@class);
+            AddActionLogger("DeleteClass", @class);
+        }
+
     }
+
+
+         
+
 }

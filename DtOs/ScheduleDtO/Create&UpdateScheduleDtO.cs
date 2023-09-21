@@ -6,7 +6,7 @@ namespace GYMmanagement.DtOs.Schedule
     {
                
         
-      public int ClassId { get; set; }
+      public Guid ClassId { get; set; }
       public DateTime ClassTimes { get; set; }//Take it 2 TIME , One as DateOnly & Second as TimeOnly
 
 

@@ -60,7 +60,7 @@ namespace GYMmanagement.Helpers
 
 
 
-            CreateMap<Membership, GetMemberShipDtO>();//To Get The MemberShips
+        
             CreateMap<Create_UpdateMemberShipDtO, Membership>();  //To Create & Update The MemberShips
 
 
@@ -73,40 +73,31 @@ namespace GYMmanagement.Helpers
             ////& i need the above code of create map to get payment by member Username
            
             CreateMap<Payment, GetPaymentDtO>();  //To Get The Payments
-            CreateMap<CreatePaymentDtO, Payment>();  //To Create The Payments
+            CreateMap<CreateUpdatePaymentDtO, Payment>(); //To Create & Update The Payments
+           
 
             CreateMap<Schedule, GetScheduleDtO>().
                 ForMember(dest => dest.ClassTime, opt => opt.//To Get The Schedules
-                MapFrom(src => src.ClassTimes.ToTimeOnly())).
-                ForMember(dest => dest.ClassDate, opt => opt.
-                MapFrom(src => src.ClassTimes.ToDateOnly()));  
+                MapFrom(src => src.ClassTimes.ToTimeOnly()));  
             CreateMap<Create_UpdateScheduleDtO, Schedule>();  //To Create & Update The Schedules
 
 
-            CreateMap<Booking, GetBookingDtO>().
-                ForMember(dest => dest.ClassTime, opt => opt.//To Get The Bookings
-                MapFrom(src => src.ClassTimes.ToTimeOnly())).
-                ForMember(dest => dest.ClassDate, opt => opt.
-                MapFrom(src => src.ClassTimes.ToDateOnly()));
+            CreateMap<Booking, GetBookingDtO>();
             CreateMap<Create___UpdateBookingDtO, Booking>();  //To Create & Update The Bookings
             
            
             
 
 
-            CreateMap<Attendance, GetAttendanceDtO>().
-                ForMember(dest => dest.ClassTime, opt => opt.//To Get The Bookings
-                MapFrom(src => src.ClassTimes.ToTimeOnly())).
-                ForMember(dest => dest.ClassDate, opt => opt.
-                MapFrom(src => src.ClassTimes.ToDateOnly()));
-            CreateMap<Create___UpdateAttendaceDtO, Attendance>();
-                  //To Create & Update The Bookings
+            CreateMap<Attendance, GetAttendanceDtO>();//To Get The Attendance for employee
+            CreateMap<Attendance, GetAttendanceForMemberDtO>();//To Get The Attendance for Member
 
-            
-            
-            
-            
-            
+
+
+
+
+
+
             CreateMap<Feedback, GetFeedBacksDtO>();  //To Get The FeedBacks
             CreateMap<Create_UpdateFeedBacksDtO, Feedback>();  //To Create & Update The FeedBacks
 

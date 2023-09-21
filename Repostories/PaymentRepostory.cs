@@ -1,65 +1,92 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using GYMmanagement.Data;
-using GYMmanagement.DtOs.ClassDtO;
 using GYMmanagement.DtOs.PaymentDtO;
-using GYMmanagement.DtOs.UsersDtO.Create;
 using GYMmanagement.Entities;
 using GYMmanagement.Filters;
 using GYMmanagement.Helpers;
 using GYMmanagement.Interfaces;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using System.Security.Claims;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+
 
 namespace GYMmanagement.Repostories
 {
-    public class PaymentRepostory : IPaymentRepostory
+    public class PaymentRepostory : ServiceForActionLogger<Payment>, IPaymentRepostory
     {
-        private readonly DataContext _context;
-        private readonly IMapper _mapper;
+  
 
-        public PaymentRepostory(DataContext context, IMapper mapper)
+
+        public PaymentRepostory(DataContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor)
+        : base(context, httpContextAccessor, mapper)
         {
-            _context = context;
-            _mapper = mapper;
         }
 
         public void CreatePayment(Payment payment)
         {
-            _context.Payment.Add(payment);
-            _context.actionLoggers.Add(new ActionLogger()
-            {
-                ActionName = "CreatePayment",
-                CreateDataTime = DateTime.UtcNow,
-                ReferenceId = payment.Id,
-                JsonData = JsonConvert.SerializeObject(payment),
-                TableName = "Payment",
-                UserId = payment.Id 
-            }) ;
-            _context.SaveChanges();
 
+            payment.SetCreateInfo(GetUserId());
+            
+            _context.Payment.Add(payment);
+            AddActionLogger("CreateClass", payment);
+
+            //_context.actionLoggers.Add(new ActionLogger()
+            //{
+            //    ActionName = "CreatePayment",
+            //    CreateDataTime = DateTime.UtcNow,
+            //    ReferenceId = payment.Id,
+            //    JsonData = JsonConvert.SerializeObject(payment),
+            //    TableName = "Payment",
+            //    UserId = payment.Id 
+            //}) ;
+           
         }
 
-      
+        public async Task<Payment> GetPaymentsById(Guid id)
+        {
+            var payment = await _context.Payment.FindAsync(id);
+            if (payment == null)
+                throw new Exception("Not Found.");
+            return payment;
+        }
+
+         public async Task Update(CreateUpdatePaymentDtO updatePaymentDtO, Guid Id)
+        {
+
+            var payment = await GetPaymentsById(Id);
+            _mapper.Map(updatePaymentDtO,payment);
+            payment.SetCreateInfo(GetUserId());
+            _context.Entry(payment).State = EntityState.Modified;
+            AddActionLogger("UpdatePayment", payment);
+             
+            
+          
+        }
+
+        public void DeletePayment(Payment payment)
+        {
+            payment.SetDeleteInfo(GetUserId());
+            _context.Payment.Remove(payment);
+            AddActionLogger("CreateClass", payment);
+        }
 
 
-      
 
-        public async Task<PagedList<GetPaymentDtO>>GetPayment(FilterParams filterParams)
+
+        public async Task<PagedList<GetPaymentDtO>>GetPayment(BasicMemberFilterParams basicMemberFilterParams)
         {
             var a =  _context.Payment.AsQueryable().Include(a => a.Member)
-                .Where(a => filterParams.Id == null || a.MemberId == filterParams.Id)
-                .Where(a => filterParams.FromDate == null || a.PaymentDate >= filterParams.FromDate)
-                .Where(a => filterParams.ToDate == null || a.PaymentDate <= filterParams.ToDate)
+                .Where(a => basicMemberFilterParams.MemberId == null || a.MemberId == basicMemberFilterParams.MemberId)
+                .Where(a => basicMemberFilterParams.FromDate == null || a.PaymentDate >= basicMemberFilterParams.FromDate)
+                .Where(a => basicMemberFilterParams.ToDate == null || a.PaymentDate <= basicMemberFilterParams.ToDate)
+              
             .AsNoTracking();
 
             return await PagedList<GetPaymentDtO>.CreateAsync(a
            .ProjectTo<GetPaymentDtO>(_mapper.ConfigurationProvider),
-               filterParams.PageNumber, filterParams.PageSize);
+               basicMemberFilterParams.PageNumber, basicMemberFilterParams.PageSize);
         }
+
         
     }
 }

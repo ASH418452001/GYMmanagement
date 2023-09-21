@@ -2,7 +2,7 @@
 
 namespace GYMmanagement.Entities
 {
-    public class AppRole : IdentityRole<int>
+    public class AppRole : IdentityRole<Guid>
     {
         public ICollection<UserRole> UserRoles { get; set; }
 

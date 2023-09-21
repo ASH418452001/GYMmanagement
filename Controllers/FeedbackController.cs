@@ -43,10 +43,10 @@ namespace GYMmanagement.Controllers
 
         //[Authorize(Policy = "RequireEmplyeeRole")]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GetFeedBacksDtO>>> GetFeedback([FromQuery] FilterParams filterParams)
+        public async Task<ActionResult<IEnumerable<GetFeedBacksDtO>>> GetFeedback([FromQuery] BasicMemberFilterParams basicMemberFilterParams)
         {
 
-            var feedback = await _uow.FeedbackRepostory.GetFeedback(filterParams);
+            var feedback = await _uow.FeedbackRepostory.GetFeedback(basicMemberFilterParams);
             Response.AddPaginationHeader(new PaginationHeader(feedback.CurrentPage, feedback.PageSize,
            feedback.TotalCount, feedback.TotalPages));
 

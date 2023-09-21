@@ -1,7 +1,10 @@
 ﻿using GYMmanagement.Data;
+using GYMmanagement.Entities;
+using GYMmanagement.Helpers;
 using GYMmanagement.Interfaces;
 using GYMmanagement.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Text.Json.Serialization;
 
 namespace GYMmanagement.Extension
@@ -15,6 +18,7 @@ namespace GYMmanagement.Extension
                 opt.UseSqlServer(config.GetConnectionString("DefaultConnection"));
             });
 
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddScoped<ITokenService, TokenServices>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -23,6 +27,7 @@ namespace GYMmanagement.Extension
             {
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
             });
+
             return services;
         }
     }

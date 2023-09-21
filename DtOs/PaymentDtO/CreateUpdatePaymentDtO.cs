@@ -2,10 +2,10 @@
 
 namespace GYMmanagement.DtOs.PaymentDtO
 {
-    public class CreatePaymentDtO
+    public class CreateUpdatePaymentDtO
     {
         
-        public int MemberId { get; set; }
+        public Guid MemberId { get; set; }
         public string PaymentMethod { get; set; }
         public DateTime PaymentDate { get; set; }
         public bool Status { get; set; }

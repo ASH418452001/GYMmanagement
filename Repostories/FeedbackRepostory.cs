@@ -40,17 +40,17 @@ namespace GYMmanagement.Repostories
 
         }
 
-        public async Task<PagedList<GetFeedBacksDtO>> GetFeedback(FilterParams filterParams)
+        public async Task<PagedList<GetFeedBacksDtO>> GetFeedback(BasicMemberFilterParams basicMemberFilterParams)
         {
             var a = _context.Feedback.AsQueryable().Include(a => a.Member)
-                 .Where(a => filterParams.Id == null || a.MemberId == filterParams.Id)
-                 .Where(a => filterParams.FromDate == null || a.Date >= filterParams.FromDate)
-                 .Where(a => filterParams.ToDate == null || a.Date <= filterParams.ToDate)
+                 .Where(a => basicMemberFilterParams.MemberId == null || a.MemberId == basicMemberFilterParams.MemberId)
+                 .Where(a => basicMemberFilterParams.FromDate == null || a.Date >= basicMemberFilterParams.FromDate)
+                 .Where(a => basicMemberFilterParams.ToDate == null || a.Date <= basicMemberFilterParams.ToDate)
              .AsNoTracking();
 
             return await PagedList<GetFeedBacksDtO>.CreateAsync(a
            .ProjectTo<GetFeedBacksDtO>(_mapper.ConfigurationProvider),
-               filterParams.PageNumber, filterParams.PageSize);
+               basicMemberFilterParams.PageNumber, basicMemberFilterParams.PageSize);
         }
     }
 }

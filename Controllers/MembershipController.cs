@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using GYMmanagement.Data;
 using GYMmanagement.DtOs.MemberShipDtO;
 using GYMmanagement.Entities;
-
+using GYMmanagement.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+
 
 namespace GYMmanagement.Controllers
 {
@@ -11,34 +11,68 @@ namespace GYMmanagement.Controllers
     [ApiController]
     public class MembershipController : ControllerBase
     {
-        private readonly DataContext _context;
+        private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
 
-        public MembershipController(DataContext context,IMapper mapper)
+        public MembershipController(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _context = context;
+            _uow = unitOfWork;
             _mapper = mapper;
         }
 
 
         [HttpPost("Insert-MemberShipTypes")]
-        public async Task<ActionResult<Membership>> CreateMemberShipType([FromQuery] Create_UpdateMemberShipDtO create_Update)
+        public async Task<ActionResult<Membership>> CreateMemberShipType([FromQuery] Create_UpdateMemberShipDtO createMembership)
         {
-            var memberShipType = new Membership
-            {
-                MemberShipType = create_Update.MemberShipType,
-                Description = create_Update.Description,
-                Price = create_Update.Price,
-                Duration = create_Update.Duration,
-                Benefits = create_Update.Benefits
+            if (await _uow.MemberShipRepostory.MembershipExist(createMembership.MemberShipType)) 
+            return BadRequest("this MemberShipType is Exist Already");
 
-            };
-            _context.Membership.Add(memberShipType);
-            await _context.SaveChangesAsync();
-            return Ok(_mapper.Map<Membership>(memberShipType));
+
+            var memberShipType = _mapper.Map<Membership>(createMembership);
+
+            _uow.MemberShipRepostory.CreateMembership(memberShipType);
+            return Ok();
+
+
+
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<List<Membership>>> GetMemberShipsAsync()
+        {
+            return await _uow.MemberShipRepostory.GetMembershipAsync();
+        }
+
+        //[Authorize(Policy = "RequireEmplyeeRole")]
+        [HttpPut]
+        public async Task<ActionResult> UpdateMembership(Create_UpdateMemberShipDtO updateMemberShipDtO, Guid Id)
+        {
+            await _uow.MemberShipRepostory.Update(updateMemberShipDtO, Id);
+
+            if (await _uow.Complete())
+                return Ok();
+            return BadRequest("Failed to update MemberShip");
+
+
         }
 
 
+        //[Authorize(Policy = "RequireEmplyeeRole")]
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteMemberShip(Guid id)
+        {
+
+
+            var membership = await _uow.MemberShipRepostory.GetMembershipByIdAsync(id);
+
+            _uow.MemberShipRepostory.DeleteMembership(membership);
+
+
+
+            if (await _uow.Complete()) return Ok("Been Deleted");
+
+            return BadRequest("Problem deleting this MemberShip");
+        }
 
 
 

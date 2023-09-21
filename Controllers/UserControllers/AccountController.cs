@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using GYMmanagement.DtOs.UsersDtO;
+﻿using GYMmanagement.DtOs.UsersDtO;
 using GYMmanagement.Entities;
 using GYMmanagement.Interfaces;
 using Microsoft.AspNetCore.Identity;
@@ -29,7 +28,7 @@ namespace GYMmanagement.Controllers.UserControllers
 
 
         [HttpPost("Login")]
-        public async Task<ActionResult<UserDtO>> Login([FromQuery] LoginDtO loginDtO)
+        public async Task<ActionResult<UserDtO>> Login([FromBody] LoginDtO loginDtO)
         {
             var user = await _userManager.Users.SingleOrDefaultAsync(x => x.UserName == loginDtO.Username);
 

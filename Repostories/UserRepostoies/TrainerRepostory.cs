@@ -14,10 +14,12 @@ namespace GYMmanagement.Repostories.UserRepostoies
         private readonly DataContext _context;
         private readonly IMapper _mapper;
 
+
         public TrainerRepostory(DataContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
+             
         }
 
 

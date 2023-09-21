@@ -1,4 +1,5 @@
-﻿using GYMmanagement.Interfaces.RepstroyInterfaces;
+﻿using GYMmanagement.Entities;
+using GYMmanagement.Interfaces.RepstroyInterfaces;
 using GYMmanagement.Interfaces.RepstroyInterfaces.UserRepostoyInterfaces;
 
 namespace GYMmanagement.Interfaces
@@ -13,7 +14,8 @@ namespace GYMmanagement.Interfaces
         IPaymentRepostory PaymentRepostory {get;}
         IScheduleRepostory ScheduleRepostory { get; }
         IFeedbackRepostory FeedbackRepostory { get; }
-
+        IAttendanceRepostory AttendanceRepostory { get; }
+        IMemberShipRepostory MemberShipRepostory { get; }
         Task<bool> Complete();
         bool HasChanges();
     }

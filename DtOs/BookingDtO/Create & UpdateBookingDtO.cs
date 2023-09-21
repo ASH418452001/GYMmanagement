@@ -6,13 +6,16 @@ namespace GYMmanagement.DtOs.BookingDtO
     {
        
         
-        public string MemberUserName { get; set; }
+        public Guid MemberId { get; set; }
        
-        public string ClassName { get; set; }
+        public string ScheduleId { get; set; }
 
 
 
-        public DateTime ClassTimes { get; set; }
+        public DateTime BookingDate { get; set; } 
+        public DateTime BookingExpireDate { get; set; } 
+
+
 
 
         public bool Status { get; set; }

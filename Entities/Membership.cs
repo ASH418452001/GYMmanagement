@@ -1,8 +1,7 @@
 ﻿namespace GYMmanagement.Entities
 {
-    public class Membership
+    public class Membership : BaseEntity
     {
-        public int Id { get; set; }
         public string MemberShipType { get; set; }
         public string Description { get; set; }
         public Decimal Price { get; set; }

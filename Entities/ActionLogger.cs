@@ -2,13 +2,14 @@
 {
     public class ActionLogger
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string ActionName { get; set; }
         public string TableName { get; set; }
-        public int UserId { get; set; }
-        public int ReferenceId { get; set; }
+        public Guid CreatedBy { get; set; } 
+        public Guid TableReferenceId { get; set; }
         public string JsonData { get; set; }
-        public  DateTime CreateDataTime { get; set; }
+        public DateTime CreatedAt { get; set; }
+
 
 
     }

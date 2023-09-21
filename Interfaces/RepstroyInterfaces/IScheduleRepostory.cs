@@ -9,8 +9,9 @@ namespace GYMmanagement.Interfaces.RepstroyInterfaces
     public interface IScheduleRepostory
     {
         Task<PagedList<GetScheduleDtO>> GetSchedule(FilterParams filterParams);
-
-
+        Task<Schedule> GetByScheduleId(Guid id);
+        void DeleteSchedule(Schedule schedule);
+        Task Update(Create_UpdateScheduleDtO updateScheduleDtO, Guid Id);
         void CreateSchedule(Schedule schedule);
     }
 }

@@ -12,9 +12,11 @@ namespace GYMmanagement.Interfaces
     {
 
 
-        Task<PagedList<GetPaymentDtO>> GetPayment(FilterParams filterParams);
-      
-     
+        Task<PagedList<GetPaymentDtO>> GetPayment(BasicMemberFilterParams basicMemberFilterParams);
+        void DeletePayment(Payment payment);
+        Task<Payment> GetPaymentsById(Guid id);
+
+        Task Update(CreateUpdatePaymentDtO updatePaymentDtO, Guid Id);
         void CreatePayment(Payment payment);
         
     }

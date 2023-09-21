@@ -12,11 +12,28 @@ namespace GYMmanagement.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "actionLoggers",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ActionName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TableName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TableReferenceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    JsonData = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreateDataTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_actionLoggers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -30,8 +47,7 @@ namespace GYMmanagement.Migrations
                 name: "AspNetUsers",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Certification = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Specialties = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Position = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -60,49 +76,12 @@ namespace GYMmanagement.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "GetTrainerDtO",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Age = table.Column<int>(type: "int", nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
-                    Specialties = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Certification = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_GetTrainerDtO", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Membership",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    MemberShipType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Duration = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Benefits = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Membership", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    RoleId = table.Column<int>(type: "int", nullable: false),
+                    RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -123,7 +102,7 @@ namespace GYMmanagement.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -145,7 +124,7 @@ namespace GYMmanagement.Migrations
                     LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -162,8 +141,8 @@ namespace GYMmanagement.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    RoleId = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -186,7 +165,7 @@ namespace GYMmanagement.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -203,12 +182,56 @@ namespace GYMmanagement.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Classe",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Duration = table.Column<int>(type: "int", nullable: false),
+                    Capacity = table.Column<int>(type: "int", nullable: false),
+                    TrainerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastUpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastUpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastDeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastDeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    VersionNumber = table.Column<int>(type: "int", nullable: true),
+                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Classe", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Classe_AspNetUsers_CreatedBy",
+                        column: x => x.CreatedBy,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Classe_AspNetUsers_LastDeletedBy",
+                        column: x => x.LastDeletedBy,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Classe_AspNetUsers_LastUpdatedBy",
+                        column: x => x.LastUpdatedBy,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Classe_AspNetUsers_TrainerId",
+                        column: x => x.TrainerId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Feedback",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    MemberId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MemberId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Rate = table.Column<double>(type: "float", nullable: false),
                     Comments = table.Column<string>(type: "nvarchar(max)", nullable: false)
@@ -225,20 +248,83 @@ namespace GYMmanagement.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Membership",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MemberShipType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Duration = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Benefits = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CreatedByUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastUpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastUpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastDeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastDeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    VersionNumber = table.Column<int>(type: "int", nullable: true),
+                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Membership", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Membership_AspNetUsers_CreatedByUserId",
+                        column: x => x.CreatedByUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Membership_AspNetUsers_LastDeletedBy",
+                        column: x => x.LastDeletedBy,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Membership_AspNetUsers_LastUpdatedBy",
+                        column: x => x.LastUpdatedBy,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Payment",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    MemberId = table.Column<int>(type: "int", nullable: false),
-                    MemberUserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MemberId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PaymentMethod = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PaymentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<bool>(type: "bit", nullable: false)
+                    Status = table.Column<bool>(type: "bit", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastUpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastUpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastDeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastDeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    VersionNumber = table.Column<int>(type: "int", nullable: true),
+                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Payment", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Payment_AspNetUsers_CreatedBy",
+                        column: x => x.CreatedBy,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Payment_AspNetUsers_LastDeletedBy",
+                        column: x => x.LastDeletedBy,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Payment_AspNetUsers_LastUpdatedBy",
+                        column: x => x.LastUpdatedBy,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Payment_AspNetUsers_MemberId",
                         column: x => x.MemberId,
@@ -247,36 +333,11 @@ namespace GYMmanagement.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Classe",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Duration = table.Column<int>(type: "int", nullable: false),
-                    Capacity = table.Column<int>(type: "int", nullable: false),
-                    TrainerId = table.Column<int>(type: "int", nullable: false),
-                    TrainerUserName = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Classe", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Classe_GetTrainerDtO_TrainerId",
-                        column: x => x.TrainerId,
-                        principalTable: "GetTrainerDtO",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Schedule",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ClassId = table.Column<int>(type: "int", nullable: false),
-                    ClassName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ClassId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ClassTimes = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -293,15 +354,11 @@ namespace GYMmanagement.Migrations
                 name: "Attendance",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    MemberId = table.Column<int>(type: "int", nullable: false),
-                    MemberUserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ClassId = table.Column<int>(type: "int", nullable: false),
-                    ClassName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    scheduleId = table.Column<int>(type: "int", nullable: false),
-                    ClassTimes = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<bool>(type: "bit", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MemberId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<bool>(type: "bit", nullable: false),
+                    ScheduleId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -312,13 +369,8 @@ namespace GYMmanagement.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Attendance_Classe_ClassId",
-                        column: x => x.ClassId,
-                        principalTable: "Classe",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Attendance_Schedule_scheduleId",
-                        column: x => x.scheduleId,
+                        name: "FK_Attendance_Schedule_ScheduleId",
+                        column: x => x.ScheduleId,
                         principalTable: "Schedule",
                         principalColumn: "Id");
                 });
@@ -327,14 +379,9 @@ namespace GYMmanagement.Migrations
                 name: "Booking",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    MemberId = table.Column<int>(type: "int", nullable: false),
-                    MemberUserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ClassId = table.Column<int>(type: "int", nullable: false),
-                    ClassName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    scheduleId = table.Column<int>(type: "int", nullable: false),
-                    ClassTimes = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MemberId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    scheduleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -344,11 +391,6 @@ namespace GYMmanagement.Migrations
                         name: "FK_Booking_AspNetUsers_MemberId",
                         column: x => x.MemberId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Booking_Classe_ClassId",
-                        column: x => x.ClassId,
-                        principalTable: "Classe",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Booking_Schedule_scheduleId",
@@ -397,24 +439,14 @@ namespace GYMmanagement.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Attendance_ClassId",
-                table: "Attendance",
-                column: "ClassId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Attendance_MemberId",
                 table: "Attendance",
                 column: "MemberId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Attendance_scheduleId",
+                name: "IX_Attendance_ScheduleId",
                 table: "Attendance",
-                column: "scheduleId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Booking_ClassId",
-                table: "Booking",
-                column: "ClassId");
+                column: "ScheduleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Booking_MemberId",
@@ -427,6 +459,21 @@ namespace GYMmanagement.Migrations
                 column: "scheduleId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Classe_CreatedBy",
+                table: "Classe",
+                column: "CreatedBy");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Classe_LastDeletedBy",
+                table: "Classe",
+                column: "LastDeletedBy");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Classe_LastUpdatedBy",
+                table: "Classe",
+                column: "LastUpdatedBy");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Classe_TrainerId",
                 table: "Classe",
                 column: "TrainerId");
@@ -435,6 +482,36 @@ namespace GYMmanagement.Migrations
                 name: "IX_Feedback_MemberId",
                 table: "Feedback",
                 column: "MemberId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Membership_CreatedByUserId",
+                table: "Membership",
+                column: "CreatedByUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Membership_LastDeletedBy",
+                table: "Membership",
+                column: "LastDeletedBy");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Membership_LastUpdatedBy",
+                table: "Membership",
+                column: "LastUpdatedBy");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Payment_CreatedBy",
+                table: "Payment",
+                column: "CreatedBy");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Payment_LastDeletedBy",
+                table: "Payment",
+                column: "LastDeletedBy");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Payment_LastUpdatedBy",
+                table: "Payment",
+                column: "LastUpdatedBy");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Payment_MemberId",
@@ -450,6 +527,9 @@ namespace GYMmanagement.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "actionLoggers");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -487,13 +567,10 @@ namespace GYMmanagement.Migrations
                 name: "Schedule");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
                 name: "Classe");
 
             migrationBuilder.DropTable(
-                name: "GetTrainerDtO");
+                name: "AspNetUsers");
         }
     }
 }
